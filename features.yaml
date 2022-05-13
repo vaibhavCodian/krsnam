@@ -1,0 +1,26 @@
+functionalities:
+  - looping for a set amount of times.
+  - tempo/speed of the audio.
+  - playing multiple audio files at once.
+  - run in background.
+  test:
+    - audioplayers:
+        - looping cache
+        - lack of control over stopping
+    - just_audio & just_audio_background:
+        - issue with playing multiple audio
+    - just_audio & audio_service: [Best Plossible solution]
+        -  Notification To Be Figured Out  --
+        - (Aternative) --> No ignorable notification. - (Positive) - Remind about the meditation
+                                                                     same time every day
+  Implement:
+    - Stacked Controls for audio
+    - couter below
+    - playspeed manipulator
+    - dropdown for binural beats
+    - cout changer.
+
+  UI:
+    - [Neumorphic] or [Glass] Control image
+    - animated_counter
+    -
