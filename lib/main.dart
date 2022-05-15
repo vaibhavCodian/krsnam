@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                       topStack(_audioHandler),
                       ProgressCounter(context),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.05,
+                        height: MediaQuery.of(context).size.height * 0.02,
                       ),
                       mediaControlStack(context, _audioHandler)
                     ],

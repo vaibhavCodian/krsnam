@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 
 class PlayerProvider extends ChangeNotifier {
   bool _isPlaying = false;
-  bool _isInfiity = false;
-  int _waveId = 1;
-  int _counts = 108;
+  bool _isInfinity = true;
+  int _waveId = 2;
+  static int counts = 108;
   double _speed = 1.2;
 
   String duration = "infi";
@@ -12,15 +12,15 @@ class PlayerProvider extends ChangeNotifier {
   get isPlaying => _isPlaying;
   get waveId => _waveId;
   get speed => _speed;
-  get counts => _counts;
-  get isInfiity => _isInfiity;
+  get count => counts;
+  get isInfinity => _isInfinity;
 
   void setIsPlaying(bool isPlaying) {
     _isPlaying = isPlaying;
     notifyListeners();
   }
   void setIsInfinity(bool infinity) {
-    _isInfiity = infinity;
+    _isInfinity = infinity;
     notifyListeners();
   }
   void setWaveId(int waveId) {
@@ -32,8 +32,8 @@ class PlayerProvider extends ChangeNotifier {
     print("Chinging Speed");
     notifyListeners();
   }
-  void setCounts(int counts) {
-    _counts = counts;
+  void setCounts(int count) {
+    counts = count;
     print("Chinging Counts");
     notifyListeners();
   }
