@@ -71,7 +71,6 @@ class AudioPlayerHandler extends BaseAudioHandler
 
     _player.play();
     _playerWave.play();
-    _playerWave.setVolume(0.8);
     _player.setSpeed(1.2);
     
   }
@@ -92,6 +91,7 @@ class AudioPlayerHandler extends BaseAudioHandler
   @override
   Future customAction(String waveId, [Map<String, dynamic>? extras]) async {
     await stop(isWave: true);
+    _playerWave.setVolume(1.0);
 
     if (int.parse(waveId) == 1){
       await _playerWave.setAsset("assets/audio/wave/Alpha.mp3");
@@ -102,9 +102,10 @@ class AudioPlayerHandler extends BaseAudioHandler
     }  else {
       await _playerWave.setAsset("assets/audio/wave/Nature.mp3");
     }
-    await _playerWave.play();
+    _playerWave.play();
 
     if (int.parse(waveId) == 0){
+      await _playerWave.setVolume(0.0);
       await _playerWave.stop();
     }
     return super.customAction(waveId, extras);
