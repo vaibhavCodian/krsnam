@@ -1,8 +1,6 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:krsnam/components.dart';
-import 'package:krsnam/constants.dart';
 import 'package:krsnam/playerProvider.dart';
 import 'package:provider/provider.dart';
 import 'util.dart';
@@ -14,6 +12,7 @@ late AudioHandler _audioHandler;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   _audioHandler = await AudioService.init(
       builder: () => AudioPlayerHandler(),
       config: const AudioServiceConfig(
@@ -51,12 +50,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late PlayerProvider _playerProvider;
 
   @override
   void initState() {
     super.initState();
-    _playerProvider = Provider.of<PlayerProvider>(context, listen: false);
   }
 
   @override
@@ -93,21 +90,10 @@ class _HomePageState extends State<HomePage> {
                   margin: EdgeInsets.only(
                       top: MediaQuery.of(context).size.height * 0.15),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       topStack(_audioHandler),
-                      Container( // <- progressn content
-                        width: MediaQuery.of(context).size.width * 0.75,
-                        margin: EdgeInsets.only(
-                          left: MediaQuery.of(context).size.height * 0.055,
-                        ),
-                        child: NeumorphicProgress(
-                          percent: 0.2,
-                          style: ProgressStyle(
-                              variant: Color(0xFF2c3e50),
-                              accent: Color(0xFF95a5a6)),
-                        ),
-                      ),
+                      ProgressCounter(context),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.05,
                       ),

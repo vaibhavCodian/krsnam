@@ -36,8 +36,9 @@ topStack(AudioHandler audioHandler){
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
-              onPressed: () {
-                print("CLicker____________");
+              onPressed: () { // <- Stop Btn
+                audioHandler.stop();
+                provider.setIsPlaying(false);
               },
               icon: Icon(Icons.stop),
               color: Colors.white70,
@@ -45,7 +46,7 @@ topStack(AudioHandler audioHandler){
               MediaQuery.of(context).size.width * 0.12,
             ),
             IconButton(
-              onPressed: () {
+              onPressed: () { // <- play/pause Btn
                 provider.isPlaying
                     ? audioHandler.pause()
                     : audioHandler.play();
@@ -60,8 +61,10 @@ topStack(AudioHandler audioHandler){
               MediaQuery.of(context).size.width * 0.20,
             ),
             IconButton(
-              onPressed: () {
-                print("clicker replay");
+              onPressed: () { // <- Replay Btn
+                print("clicked replay");
+                // 1. reset the counts;
+                // 2. reset the progress stop & replay the audio
               },
               icon: Icon(Icons.replay),
               color: Colors.white70,
@@ -76,6 +79,46 @@ topStack(AudioHandler audioHandler){
   },
 );
 
+}
+
+ProgressCounter(BuildContext context){
+  return Consumer<PlayerProvider>(
+  builder: (context, provider, child) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.end,
+    children: [
+      // todo: Implement Progress
+      // Container( // <- progressn content
+      //   width: MediaQuery.of(context).size.width * 0.75,
+      //   margin: EdgeInsets.only(
+      //     right: MediaQuery.of(context).size.width * 0.125,
+      //   ),
+      //   child: NeumorphicProgress(
+      //     percent: 0.2,
+      //     style: ProgressStyle(
+      //         variant: Color(0xFF2c3e50),
+      //         accent: Color(0xFF95a5a6)),
+      //   ),
+      // ),
+      Container( // <- Counter Content
+        margin: EdgeInsets.only(
+          top: 1.5,
+          right: MediaQuery.of(context).size.width * 0.125,
+        ),
+        child: NeumorphicText(
+          "Count: ${provider.counts}",
+          textAlign: TextAlign.left,
+          style: NeumorphicStyle(
+              color: Color(0xFF2C3A47)
+          ),
+          textStyle: NeumorphicTextStyle(
+              fontWeight: FontWeight.w400, fontSize: 20),
+        ),
+      ),
+    ],
+  );
+  },
+);
 }
 
 Container mediaControlStack(BuildContext context, AudioHandler audioHandler){
@@ -104,12 +147,13 @@ Container mediaControlStack(BuildContext context, AudioHandler audioHandler){
               fontWeight: FontWeight.bold, fontSize: 20),
         ),
         SizedBox(height: 10),
-        waveControl(),
+        waveControl(audioHandler),
         SizedBox(height: 10),
         Text(
-          "Count",
+          "Count / गिनती",
           style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 20),
+              fontWeight: FontWeight.bold, fontSize: 20
+          ),
         ),
         SizedBox(height: 10),
         Row(
@@ -118,28 +162,34 @@ Container mediaControlStack(BuildContext context, AudioHandler audioHandler){
             Flexible(
               child: Neumorphic(
                 margin: EdgeInsets.only(
-                    right: MediaQuery.of(context).size.width * 0.05
+                    right: MediaQuery.of(context).size.width * 0.04
                 ) ,
                 child: TextField(
                   controller: countsController,
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                      hintText: "Counts"
+                    hintText: "Counts",
+
                   ),
                 ),
               ),
             ),
             NeumorphicButton(onPressed: (){
               print("clicked");
-              countsController.value = TextEditingValue(
-                  text: "Infinity"
-              );
-            }, child: Icon(FontAwesomeIcons.arrowRight)),
-            SizedBox(width: 20),
-            NeumorphicButton(onPressed: (){
-              print("clicked");
-            }, child: Icon(FontAwesomeIcons.infinity)),
+
+            }, child: Row(
+              children: [
+                Icon(FontAwesomeIcons.infinity),
+                SizedBox(width: 15),
+                Text(
+                  "अनन्त",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20
+                  ),
+                )
+              ],
+            )),
           ],
         ),
       ],
@@ -170,8 +220,7 @@ speedControl(AudioHandler audioHandler) {
 
 // NeuralWave Control
 
-waveControl() {
-
+waveControl(AudioHandler audioHandler) {
   return Consumer<PlayerProvider>(
   builder: (context, provider, child) {
   return NeumorphicToggle(
@@ -179,17 +228,17 @@ waveControl() {
     selectedIndex: provider.waveId,
     displayForegroundOnlyIfSelected: true,
     children: [
-      ToggleElement(
+      ToggleElement( // Alpha 10.5hz
         background: Center(child: Text("ALPHA", style: TextStyle(fontWeight: FontWeight.w500),)),
         foreground: Center(child: Text("ALPHA", style: TextStyle(fontWeight: FontWeight.w700),)),
       ),
-      ToggleElement(
-        background: Center(child: Text("Beta", style: TextStyle(fontWeight: FontWeight.w500),)),
-        foreground: Center(child: Text("BETA", style: TextStyle(fontWeight: FontWeight.w700),)),
-      ),
-      ToggleElement(
+      ToggleElement( // Theta 8hz to 4hz
         background: Center(child: Text("THETA", style: TextStyle(fontWeight: FontWeight.w500),)),
         foreground: Center(child: Text("THETA", style: TextStyle(fontWeight: FontWeight.w700),)),
+      ),
+      ToggleElement( // Gamma is 40hz 6hz
+        background: Center(child: Text("Gamma", style: TextStyle(fontWeight: FontWeight.w500),)),
+        foreground: Center(child: Text("Gamma", style: TextStyle(fontWeight: FontWeight.w700),)),
       ),
       ToggleElement(
         background: Center(child: Text("Nature", style: TextStyle(fontWeight: FontWeight.w500),)),
@@ -213,6 +262,7 @@ waveControl() {
     ),
     onChanged: (value) {
       provider.setWaveId(value);
+      audioHandler.customAction(value.toString());
     },
   );
   },
